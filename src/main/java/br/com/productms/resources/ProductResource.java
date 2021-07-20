@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.productms.entities.Product;
-import br.com.productms.entities.dto.ProductDTO;
 import br.com.productms.resources.exception.ErrorGenericException;
 import br.com.productms.service.ProductService;
 
@@ -31,29 +30,23 @@ public class ProductResource {
 	private ProductService productService;
 	
 
-    @GetMapping
-    public ResponseEntity<List<ProductDTO>> findAll() {
+    @GetMapping("/listAll")
+    public ResponseEntity<List<Product>> findAll() {
         List<Product> list = productService.findAll();
 
-        List<ProductDTO> listDto = list.stream()
-                .map(obj -> new ProductDTO(obj))
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(listDto);
+        return ResponseEntity.ok(list);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/searchID/{id}")
     public ResponseEntity<?> findById(@PathVariable String id){
         Product product = productService.findById(id);
-
         return ResponseEntity.ok(product);
     }
 
-    @PostMapping
-    public ResponseEntity<?> save ( @Valid @RequestBody ProductDTO productDTO){
+    @PostMapping("/save")
+    public ResponseEntity<?> save ( @Valid @RequestBody Product product){
 
         try{
-            Product product = productService.fromDTO(productDTO);
             product = productService.save(product);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(product);
@@ -66,18 +59,15 @@ public class ProductResource {
 
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Product> update(@Valid @RequestBody ProductDTO productDTO, @PathVariable String id){
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Product> update(@Valid @RequestBody Product product, @PathVariable String id){
 
-        Product product = productService.fromDTO(productDTO);
-        product.setId(id);
-        product = productService.update(product);
-
+        productService.update(product);
         return ResponseEntity.ok(product);
 
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?>  delete (@PathVariable String id){
         Product product = productService.delete(id);
 

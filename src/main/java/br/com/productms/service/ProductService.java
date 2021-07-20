@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.productms.entities.Product;
-import br.com.productms.entities.dto.ProductDTO;
 import br.com.productms.repositories.ProductRepository;
 import br.com.productms.service.exception.ObjectNotFoundException;
 
@@ -19,20 +18,11 @@ public class ProductService {
 
 	@Autowired
 	private ProductRepository productRepository;
-	
-	//converter para DTO
-    public Product fromDTO(ProductDTO productDTO){
-        Product product = new Product();
-        product.setId(productDTO.getId());
-        product.setName(productDTO.getName());
-        product.setDescription(productDTO.getDescription());
-        product.setPrice(productDTO.getPrice());
-        return product;
-    }
     
     public List<Product> findAll() {
 
         return productRepository.findAll();
+    
     }
     
     public Product findById (String id){
